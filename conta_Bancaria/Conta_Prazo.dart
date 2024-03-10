@@ -1,4 +1,5 @@
 import 'Conta.dart';
+import 'dart:io';
 
 class ContaPrazo extends Conta {
   String? _dataMaturidade;
@@ -27,42 +28,5 @@ class ContaPrazo extends Conta {
   set periodoAplicacao(int periodoAplicacao) =>
       _periodoAplicacao = periodoAplicacao;
 
-
-
-  @override
-  void dadosConta() {
-    print("< ------- Dados da conta ------- >");
-    print(
-        "Titular: ${this.titular} \nNumero da Conta: ${this.numeroConta} \nData de Criacão: ${this.dataCriacao} \nData de Maturidade: ${this.dataMaturidade} \nPeriodo de Aplicacão: ${this._periodoAplicacao} \n");
-  }
-
-  @override
-  void depositar(double valor) {
-    if (valor <= 0) {
-      print("Não é possivel depositar o valor informado!");
-    }
-    this.saldo += valor;
-  }
-
-  @override
-  void levantar(double valor) {
-    if (valor + 100 > this.saldo) {
-      print("Saldo insuficiente para levantar ${valor}");
-    }
-    this.saldo - valor;
-    print("Efectuou um levantamento de ${valor} aos ");
-  }
-
-  @override
-  void transferirDinheiro(int contaDestino, double valor) {
-    if (valor > this.saldo) {
-      print("Erro! O seu saldo é insuficiente para trasferir ${valor}");
-    }
-    
-  }
-
-  @override
-  void verificarSaldo() {
-    print("O seu saldo é de: ${this.saldo}");
-  }
+ 
 }

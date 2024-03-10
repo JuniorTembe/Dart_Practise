@@ -1,3 +1,5 @@
+
+
 abstract class Conta {
   String? _titular;
   String? _numeroConta;
@@ -21,9 +23,7 @@ abstract class Conta {
   set numeroCOnta(int? numeroCOnta) => _numeroConta = numeroConta;
   set dataCriacao(String? dataCriacao) => _dataCriacao = dataCriacao;
 
-  void levantar(double valor);
-  void depositar(double valor);
-  void dadosConta();
-  void transferirDinheiro(int contaDestino, double valor);
-  void verificarSaldo();
+  
+
+ 
 }

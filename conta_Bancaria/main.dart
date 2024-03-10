@@ -4,5 +4,5 @@ import 'Menu.dart';
 
 void main() {
   Menu menu = new Menu();
-  menu.criarConta();
+  menu.menuPrincipal();
 }
