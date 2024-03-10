@@ -6,6 +6,8 @@ import "Conta_Prazo.dart";
 import "Conta_Salario.dart";
 
 class Menu {
+  
+
   void criarConta() {
     print("< ---------- Banco LDS ---------- >\n");
     print("Seja bem-vindo ao nosso banco\n");
@@ -76,8 +78,9 @@ class Menu {
       }
     } while (nuit == null);
     String numConta = gerarNumeroConta();
-    Conta conta =
+    ContaSalario conta =
         new ContaSalario(nuit, titular, numConta, saldo, obterDataHoraAtual());
+    salvarDetalhesContaSalario(conta);
     print("Conta criada com sucesso! seu numero de Conta é : ${numConta}");
   }
 
@@ -95,39 +98,41 @@ class Menu {
     } while (titular == null || titular.length < 3);
 
     do {
-      stdout.write("Digite o saldo inicial: ");
+      stdout.write(
+          "Digite o saldo inicial (deve ser maior ou igual a 4000 MZN): ");
       saldo = double.tryParse(stdin.readLineSync() ?? '');
-    } while (saldo == null);
+    } while (saldo == null || saldo < 4000);
 
     do {
       stdout.write("Digite a data de maturidade (yyyy-mm-dd): ");
       dataMaturidade = stdin.readLineSync();
+      if (dataMaturidade != null && !isValidDate(dataMaturidade)) {
+        print("Data de maturidade inválida. Por favor, tente novamente.");
+      }
     } while (dataMaturidade == null || !isValidDate(dataMaturidade));
 
     do {
-      print("A conta é autorrenovável?  ");
-      print("1 - SIM");
-      print("2 - NÃO");
-      String? opc = stdin.readLineSync()?.toLowerCase();
-      int Opc4 = int.parse(opc!);
-      switch (Opc4) {
-        case 1:
-          autorenovavel = true;
-          break;
-        case 2:
-          autorenovavel = false;
-        default:
-          print("Opcão inválida");
+      stdout.write("A conta é autorrenovável? (S/N): ");
+      String? resposta = stdin.readLineSync()?.toUpperCase();
+      if (resposta == 'S') {
+        autorenovavel = true;
+      } else if (resposta == 'N') {
+        autorenovavel = false;
+      } else {
+        print("Resposta inválida. Por favor, digite S ou N.");
       }
     } while (autorenovavel == null);
 
     do {
-      stdout.write("Digite o período de aplicação  (Em anos): ");
+      stdout.write("Digite o período de aplicação (em anos): ");
       periodoAplicacao = int.tryParse(stdin.readLineSync() ?? '');
-    } while (periodoAplicacao == null);
+      if (periodoAplicacao == null || periodoAplicacao <= 0) {
+        print("Período de aplicação inválido. Deve ser um número positivo.");
+      }
+    } while (periodoAplicacao == null || periodoAplicacao <= 0);
 
     String numConta = gerarNumeroConta();
-    Conta conta = new ContaPrazo(
+    ContaPrazo conta = new ContaPrazo(
       titular,
       numConta,
       saldo,
@@ -136,6 +141,8 @@ class Menu {
       autorenovavel,
       periodoAplicacao,
     );
+    salvarDetalhesContaPrazo(conta);
+
     print("Conta a prazo criada com sucesso! Seu número de conta é: $numConta");
   }
 
@@ -199,5 +206,74 @@ class Menu {
     }
 
     return true;
+  }
+
+  void salvarDetalhesContaSalario(ContaSalario conta) {
+    try {
+      Directory databaseDir = Directory("database/ContaSalario");
+      if (!databaseDir.existsSync()) {
+        databaseDir.createSync();
+      }
+
+      File file = File('${databaseDir.path}/${conta.numeroConta}.txt');
+      String detalhesConta = '''
+        Tipo de Conta: Conta Salário
+        Titular: ${conta.titular}
+        Número da Conta: ${conta.numeroConta}
+        Saldo: ${conta.saldo}
+        NUIT: ${conta.nuit}
+        Data e Hora de Abertura: ${conta.dataCriacao}
+      ''';
+
+      file.writeAsStringSync(detalhesConta);
+      print('Detalhes da conta salário salvos com sucesso!');
+    } catch (e) {
+      print('Erro ao salvar os detalhes da conta salário: $e');
+    }
+  }
+
+  // Método para salvar os detalhes da conta a prazo
+  void salvarDetalhesContaPrazo(ContaPrazo conta) {
+    try {
+      Directory databaseDir = Directory("database/ContaPrazo");
+      if (!databaseDir.existsSync()) {
+        databaseDir.createSync();
+      }
+
+      File file = File('${databaseDir.path}/${conta.numeroConta}.txt');
+      String detalhesConta = '''
+        Tipo de Conta: Conta Prazo
+        Titular: ${conta.titular}
+        Número da Conta: ${conta.numeroConta}
+        Saldo: ${conta.saldo}
+        Data e Hora de Abertura: ${conta.dataCriacao}
+        Data de Maturidade: ${conta.dataMaturidade}
+        Autorrenovável: ${conta.autorenovavel ? 'Sim' : 'Não'}
+        Período de Aplicação: ${conta.periodoAplicacao} anos
+      ''';
+
+      file.writeAsStringSync(detalhesConta);
+      print('Detalhes da conta a prazo salvos com sucesso!');
+    } catch (e) {
+      print('Erro ao salvar os detalhes da conta a prazo: $e');
+    }
+  }
+
+  void atualizarDetalhesContaSalario(String novoSaldo) {
+    try {
+      File file = File('detalhes_conta_salario.txt');
+
+      String conteudo = file.readAsStringSync();
+
+      List<String> linhas = conteudo.split('\n');
+
+      linhas[2] = 'Saldo: $novoSaldo';
+
+      file.writeAsStringSync(linhas.join('\n'));
+
+      print('Saldo da conta salário atualizado com sucesso!');
+    } catch (e) {
+      print('Erro ao atualizar o saldo da conta salário: $e');
+    }
   }
 }
