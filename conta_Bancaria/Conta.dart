@@ -4,7 +4,12 @@ abstract class Conta {
   double _saldo = 0;
   String? _dataCriacao;
 
-  Conta(this._titular, this._numeroConta, this._saldo, this._dataCriacao);
+  Conta(String titular, int numeroConta, double saldo, String dataCriacao) {
+    this._titular = titular;
+    this._numeroConta = numeroConta;
+    this._dataCriacao = dataCriacao;
+    this._saldo = saldo;
+  }
 
   double get saldo => _saldo;
   String? get titular => _titular;
@@ -16,11 +21,9 @@ abstract class Conta {
   set numeroCOnta(int? numeroCOnta) => _numeroConta = numeroConta;
   set dataCriacao(String? dataCriacao) => _dataCriacao = dataCriacao;
 
-  void levantar();
-  void depositar();
+  void levantar(double valor);
+  void depositar(double valor);
   void dadosConta();
-  void transferirDinheiro();
-  void verificarSaldo() {
-    print("O seu saldo é de: ${this._saldo}");
-  }
+  void transferirDinheiro(int contaDestino, double valor);
+  void verificarSaldo();
 }
