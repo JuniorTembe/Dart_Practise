@@ -1,10 +1,10 @@
 abstract class Conta {
   String? _titular;
-  int? _numeroConta;
+  String? _numeroConta;
   double _saldo = 0;
   String? _dataCriacao;
 
-  Conta(String titular, int numeroConta, double saldo, String dataCriacao) {
+  Conta(String titular, String numeroConta, double saldo, String dataCriacao) {
     this._titular = titular;
     this._numeroConta = numeroConta;
     this._dataCriacao = dataCriacao;
@@ -13,7 +13,7 @@ abstract class Conta {
 
   double get saldo => _saldo;
   String? get titular => _titular;
-  int? get numeroConta => _numeroConta;
+  String? get numeroConta => _numeroConta;
   String? get dataCriacao => _dataCriacao;
 
   set saldo(double saldo) => _saldo = saldo;

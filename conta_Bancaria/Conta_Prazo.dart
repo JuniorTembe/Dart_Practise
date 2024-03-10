@@ -8,7 +8,7 @@ class ContaPrazo extends Conta {
 
   ContaPrazo(
       String titular,
-      int numeroConta,
+      String numeroConta,
       double saldo,
       String dataCriacao,
       this._dataMaturidade,
